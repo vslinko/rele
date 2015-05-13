@@ -1,5 +1,5 @@
 import {Actions} from 'flummox';
-import fetchJsonApi from './fetchJsonApi';
+import fetchJsonApi from '../utils/fetchJsonApi';
 
 export default class CategoryRelayActions extends Actions {
   fetch({id}, fields, include, parent) {

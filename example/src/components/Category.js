@@ -1,7 +1,7 @@
 import React from 'react';
 import Item from './Item';
-import {ql} from '../../lib/ql';
-import flux from './f';
+import {ql} from '../../../lib/ql';
+import flux from '../flux';
 
 export default class Category extends React.Component {
   static queries = {

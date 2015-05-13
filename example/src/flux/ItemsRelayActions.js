@@ -1,5 +1,5 @@
 import {Actions} from 'flummox';
-import fetchJsonApi from './fetchJsonApi';
+import fetchJsonApi from '../utils/fetchJsonApi';
 
 export default class ItemsRelayActions extends Actions {
   fetch({}, fields, include, parent) {

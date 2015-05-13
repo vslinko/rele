@@ -1,4 +1,4 @@
-import Relay from '../../lib/Relay';
+import Relay from '../../../lib/Relay';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
 import CategoryRelayActions from './CategoryRelayActions';

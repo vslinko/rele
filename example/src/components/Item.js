@@ -1,7 +1,7 @@
 import React from 'react';
-import {ql} from '../../lib/ql';
-import flux from './f';
-import connectToStores from './connectToStores';
+import {ql} from '../../../lib/ql';
+import flux from '../flux';
+import connectToStores from '../utils/connectToStores';
 
 @connectToStores(flux, {
   item: (store, {item}) => ({

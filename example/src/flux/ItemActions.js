@@ -1,7 +1,7 @@
-import uniqueRequestId from '../../lib/util/uniqueRequestId';
-import timeout from './timeout';
+import uniqueRequestId from '../../../lib/util/uniqueRequestId';
+import timeout from '../utils/timeout';
 import {Actions} from 'flummox';
-import {SyncError, syncronize} from './syncronize';
+import {SyncError, syncronize} from '../utils/syncronize';
 
 export default class ItemActions extends Actions {
   constructor(flux) {
