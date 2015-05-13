@@ -26,8 +26,17 @@ server.route({
             ]
           }
         }
-      },
-      included: [
+      }
+    });
+  }
+});
+
+server.route({
+  method: 'GET',
+  path: '/api/items',
+  handler: function (request, reply) {
+    reply({
+      data: [
         {type: 'Item', id: '1', title: 'iPhone 6 Plus'},
         {type: 'Item', id: '2', title: 'iPhone 6'},
         {type: 'Item', id: '3', title: 'iPhone 5S'}

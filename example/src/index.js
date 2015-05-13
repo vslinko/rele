@@ -11,6 +11,11 @@ const relay = new Relay({
         baseUrl: `/api/categories/${id}`,
         id
       };
+    },
+    items({}, fields, include, parent) {
+      return {
+        baseUrl: `/api/items?category=${parent.id}`
+      };
     }
   }
 });

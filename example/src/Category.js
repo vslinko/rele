@@ -9,7 +9,7 @@ export default class Category extends React.Component {
         Category {
           title,
           subtitle,
-          items {
+          items() {
             ${Item.queries.item()}
           }
         }
