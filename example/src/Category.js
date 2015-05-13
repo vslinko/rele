@@ -37,18 +37,12 @@ export default class Category extends React.Component {
     });
   }
 
-  deleteItem(item) {
-    flux.getActions('item').deleteItem(item);
-  }
-
   renderItem(item, index) {
     return (
       <div key={item.id || `unsaved${index}`}>
         {item.id || 'Saving'}
         &nbsp;
         <Item item={item} />
-        &nbsp;
-        <button onClick={() => this.deleteItem(item)}>Delete</button>
       </div>
     );
   }

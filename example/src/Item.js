@@ -24,6 +24,10 @@ export default class Item extends React.Component {
     flux.getActions('item').setPrice(this.props.item, this.props.item.price + 1);
   }
 
+  deleteItem() {
+    flux.getActions('item').deleteItem(this.props.item);
+  }
+
   render() {
     return (
       <span>
@@ -33,6 +37,10 @@ export default class Item extends React.Component {
         &nbsp;
         {this.props.item.id &&
           <button onClick={() => this.incrementPrice()}>Increment</button>
+        }
+        &nbsp;
+        {this.props.item.id &&
+          <button onClick={() => this.deleteItem()}>Delete</button>
         }
         {this.props.error && `Unable to increment: ${this.props.error.message}`}
       </span>
