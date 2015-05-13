@@ -6,7 +6,7 @@ import connectToStores from './connectToStores';
 
 @connectToStores(flux, {
   relay: (store) => ({
-    hasUncompletedRequests: store.hasUncompletedRequests()
+    requestsCount: store.getRequestsCount()
   })
 })
 export default class App extends React.Component {
@@ -27,7 +27,7 @@ export default class App extends React.Component {
 
     return (
       <div>
-        {this.props.hasUncompletedRequests && 'Saving...'}
+        {this.props.requestsCount > 0 && `Saving ${this.props.requestsCount}`}
         <Category category={this.props.category} />
       </div>
     );
