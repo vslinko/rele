@@ -78,6 +78,26 @@ export default class ItemActions extends Actions {
     }
   }
 
+  async deleteItem(item) {
+    const id = uniqueRequestId();
+
+    this.flux.getActions('relay').startDeleteRequest(id, item);
+
+    try {
+      const response = await fetch(`/api/items/${item.id}`, {
+        method: 'DELETE'
+      });
+
+      const json = await response.json();
+      await timeout(1000);
+
+      this.flux.getActions('relay').endDeleteRequest(id, json);
+    } catch (e) {
+      this.flux.getActions('relay').endDeleteRequest(id, null);
+      throw e;
+    }
+  }
+
   handleSetPriceError(item, price, error) {
     return {item, price, error};
   }

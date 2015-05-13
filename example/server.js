@@ -143,4 +143,15 @@ server.route({
   }
 });
 
+server.route({
+  method: 'DELETE',
+  path: '/api/items/{id}',
+  handler: function (request, reply) {
+    data.Item = data.Item.filter(function(item) { return item.id !== request.params.id; });
+    reply({
+      data: null
+    });
+  }
+});
+
 server.start();
