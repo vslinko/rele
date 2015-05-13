@@ -131,6 +131,9 @@ server.route({
   path: '/api/items/{id}',
   handler: function (request, reply) {
     const item = getOne('Item', request.params.id);
+    if (!item) {
+      return reply({data: null}).code(404);
+    }
     if (request.payload.data.price > 105) {
       return reply({
         errors: [{title: 'Price is too large'}]

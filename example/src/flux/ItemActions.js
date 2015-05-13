@@ -78,7 +78,6 @@ export default class ItemActions extends Actions {
     }
   }
 
-  @syncronize(item => `ItemActions${item.id}`)
   async deleteItem(item, lock) {
     const id = uniqueRequestId();
 
@@ -94,9 +93,9 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('relay').endDeleteRequest(id, json);
+      this.flux.getActions('relay').endDeleteRequest(id, true, json);
     } catch (e) {
-      this.flux.getActions('relay').endDeleteRequest(id, null);
+      this.flux.getActions('relay').endDeleteRequest(id, false);
       throw e;
     }
   }
