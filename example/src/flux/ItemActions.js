@@ -35,7 +35,7 @@ export default class ItemActions extends Actions {
     }
   }
 
-  @syncronize(item => item.id)
+  @syncronize(item => `ItemActions${item.id}`)
   async setPrice(item, price, lock) {
     const id = uniqueRequestId();
 
@@ -78,12 +78,15 @@ export default class ItemActions extends Actions {
     }
   }
 
-  async deleteItem(item) {
+  @syncronize(item => `ItemActions${item.id}`)
+  async deleteItem(item, lock) {
     const id = uniqueRequestId();
 
     this.flux.getActions('relay').startDeleteRequest(id, item);
 
     try {
+      await lock;
+
       const response = await fetch(`/api/items/${item.id}`, {
         method: 'DELETE'
       });

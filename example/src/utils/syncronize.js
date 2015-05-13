@@ -1,9 +1,10 @@
 export class SyncError extends Error {}
 
+const queues = {};
+const processed = {};
+
 export function syncronize(keyGetter) {
   return function syncronize(obj, prop, descriptor) {
-    let queues = {};
-    let processed = {};
     const method = descriptor.value;
 
     async function processQueue(context, args) {
