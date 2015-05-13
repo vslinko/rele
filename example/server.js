@@ -37,9 +37,9 @@ server.route({
   handler: function (request, reply) {
     reply({
       data: [
-        {type: 'Item', id: '1', title: 'iPhone 6 Plus'},
-        {type: 'Item', id: '2', title: 'iPhone 6'},
-        {type: 'Item', id: '3', title: 'iPhone 5S'}
+        {type: 'Item', id: '1', title: 'iPhone 6 Plus', links: {category: {linkage: {type: 'Category', id: request.query.filter.category}}}},
+        {type: 'Item', id: '2', title: 'iPhone 6', links: {category: {linkage: {type: 'Category', id: request.query.filter.category}}}},
+        {type: 'Item', id: '3', title: 'iPhone 5S', links: {category: {linkage: {type: 'Category', id: request.query.filter.category}}}}
       ]
     });
   }

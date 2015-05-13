@@ -1,5 +1,5 @@
-export default function createUrl(baseUrl, fields, include) {
-  const params = [];
+function createUrl(baseUrl, fields, include, params = []) {
+  params = params.slice();
 
   if (include.length > 0) {
     params.push(`include=${include.join(',')}`);
@@ -12,4 +12,10 @@ export default function createUrl(baseUrl, fields, include) {
   });
 
   return params.length > 0 ? `${baseUrl}?${params.join('&')}` : baseUrl;
+}
+
+export default async function fetchJsonApi(baseUrl, fields, include, params = []) {
+  const url = createUrl(baseUrl, fields, include, params);
+  const response = await fetch(url);
+  return await response.json();
 }
