@@ -1,7 +1,22 @@
 import React from 'react';
 import Item from './Item';
+import {ql} from '../../lib/ql';
 
 export default class Category extends React.Component {
+  static queries = {
+    category() {
+      return ql`
+        Category {
+          title,
+          subtitle,
+          items {
+            ${Item.queries.item()}
+          }
+        }
+      `;
+    }
+  };
+
   static query() {
     return {
       category: {
