@@ -1,5 +1,6 @@
 import Relay from '../../lib/Relay';
 import ItemActions from './ItemActions';
+import ItemStore from './ItemStore';
 import fetchJsonApi from './fetchJsonApi';
 
 export default class Flux extends Relay {
@@ -34,5 +35,6 @@ export default class Flux extends Relay {
     });
 
     this.createActions('item', ItemActions, this);
+    this.createStore('item', ItemStore, this);
   }
 }

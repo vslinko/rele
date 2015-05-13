@@ -20,7 +20,7 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <Category category={this.props.category} createItem={this.props.flux.getActions('item').createItem} />
+        <Category category={this.props.category} />
       </div>
     );
   }

@@ -2,9 +2,7 @@ import 'whatwg-fetch';
 import React from 'react';
 import relayWrapper from '../../lib/react/relayWrapper';
 import App from './App';
-import Flux from './Flux';
-
-const flux = new Flux();
+import flux from './f';
 
 const RelayApp = relayWrapper(flux)(App);
 

@@ -1,6 +1,7 @@
 import React from 'react';
 import Item from './Item';
 import {ql} from '../../lib/ql';
+import flux from './f';
 
 export default class Category extends React.Component {
   static queries = {
@@ -20,9 +21,10 @@ export default class Category extends React.Component {
   };
 
   createItem() {
-    this.props.createItem({
+    flux.getActions('item').createItem({
       type: 'Item',
       id: null,
+      price: 0,
       title: String(Math.random()),
       links: {
         category: {

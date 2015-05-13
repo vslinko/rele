@@ -33,6 +33,7 @@ const data = {
       type: 'Item',
       id: itemIds[0],
       title: 'iPhone 6 Plus',
+      price: 100,
       links: {
         category: {
           linkage: {
@@ -46,6 +47,7 @@ const data = {
       type: 'Item',
       id: itemIds[1],
       title: 'iPhone 6',
+      price: 101,
       links: {
         category: {
           linkage: {
@@ -59,6 +61,7 @@ const data = {
       type: 'Item',
       id: itemIds[2],
       title: 'iPhone 5S',
+      price: 102,
       links: {
         category: {
           linkage: {
@@ -117,6 +120,23 @@ server.route({
     const item = request.payload.data;
     item.id = getUniqueId();
     data['Item'].push(item);
+    reply({
+      data: item
+    });
+  }
+});
+
+server.route({
+  method: 'PUT',
+  path: '/api/items/{id}',
+  handler: function (request, reply) {
+    const item = getOne('Item', request.params.id);
+    if (request.payload.data.price > 105) {
+      return reply({
+        errors: [{title: 'Price is too large'}]
+      });
+    }
+    item.price = request.payload.data.price;
     reply({
       data: item
     });
