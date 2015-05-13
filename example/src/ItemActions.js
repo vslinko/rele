@@ -14,20 +14,25 @@ export default class ItemActions extends Actions {
 
     this.flux.getActions('relay').startCreateRequest(id, item);
 
-    const response = await fetch('/api/items', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        data: item
-      })
-    });
+    try {
+      const response = await fetch('/api/items', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          data: item
+        })
+      });
 
-    const json = await response.json();
-    await timeout(1000);
+      const json = await response.json();
+      await timeout(1000);
 
-    this.flux.getActions('relay').endCreateRequest(id, json);
+      this.flux.getActions('relay').endCreateRequest(id, json);
+    } catch (e) {
+      this.flux.getActions('relay').endCreateRequest(id, null);
+      throw e;
+    }
   }
 
   @syncronize(item => item.id)
