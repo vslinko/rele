@@ -6,7 +6,7 @@ export default class App extends React.Component {
   static queries = {
     category() {
       return ql`
-        category(id: ${1}) {
+        category(id: ${"1"}) {
           ${Category.queries.category()}
         }
       `;
@@ -20,7 +20,7 @@ export default class App extends React.Component {
 
     return (
       <div>
-        <Category category={this.props.category} />
+        <Category category={this.props.category} createItem={this.props.flux.getActions('item').createItem} />
       </div>
     );
   }

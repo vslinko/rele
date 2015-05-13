@@ -14,9 +14,9 @@ export default class Item extends React.Component {
 
   render() {
     return (
-      <div>
-        <h3>{this.props.item.title}</h3>
-      </div>
+      <span>
+        <b>{this.props.item.title}</b>
+      </span>
     );
   }
 }
