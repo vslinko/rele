@@ -13,24 +13,24 @@ server.route({
   handler: function (request, reply) {
     reply({
       data: {
-        type: 'category',
+        type: 'Category',
         id: request.params.id,
         title: 'Phones',
         subtitle: 'Mobile phones',
         links: {
           items: {
             linkage: [
-              {type: 'item', id: '1'},
-              {type: 'item', id: '2'},
-              {type: 'item', id: '3'}
+              {type: 'Item', id: '1'},
+              {type: 'Item', id: '2'},
+              {type: 'Item', id: '3'}
             ]
           }
         }
       },
       included: [
-        {type: 'item', id: '1', title: 'iPhone 6 Plus'},
-        {type: 'item', id: '2', title: 'iPhone 6'},
-        {type: 'item', id: '3', title: 'iPhone 5S'}
+        {type: 'Item', id: '1', title: 'iPhone 6 Plus'},
+        {type: 'Item', id: '2', title: 'iPhone 6'},
+        {type: 'Item', id: '3', title: 'iPhone 5S'}
       ]
     });
   }

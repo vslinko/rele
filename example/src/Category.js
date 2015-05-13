@@ -17,18 +17,6 @@ export default class Category extends React.Component {
     }
   };
 
-  static query() {
-    return {
-      category: {
-        type: 'category',
-        fields: ['title', 'subtitle'],
-        include: {
-          items: Item.query().item
-        }
-      }
-    };
-  }
-
   render() {
     return (
       <div>

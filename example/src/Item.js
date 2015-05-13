@@ -12,15 +12,6 @@ export default class Item extends React.Component {
     }
   };
 
-  static query() {
-    return {
-      item: {
-        type: 'item',
-        fields: ['title']
-      }
-    };
-  }
-
   render() {
     return (
       <div>
