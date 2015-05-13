@@ -30,7 +30,7 @@ export default class ItemActions extends Actions {
     this.flux.getActions('relay').endCreateRequest(id, json);
   }
 
-  @syncronize
+  @syncronize(item => item.id)
   async setPrice(item, price, lock) {
     const id = uniqueRequestId();
 
