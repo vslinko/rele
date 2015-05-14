@@ -2,7 +2,7 @@ import {Actions} from 'flummox';
 import fetchJsonApi from '../utils/fetchJsonApi';
 
 export default class ItemsReleActions extends Actions {
-  fetch({}, fields, include, parent) {
+  fetch({}, fields, include, parent, flux) {
     const params = [];
 
     if (parent.type === 'Category') {
