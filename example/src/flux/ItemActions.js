@@ -44,7 +44,10 @@ export default class ItemActions extends Actions {
     }
   }
 
-  @syncronize(1, itemId => `ItemActions#${itemId}`)
+  @syncronize({
+    limit: 1,
+    queueKey: itemId => `ItemActions#${itemId}`
+  })
   async setPrice(itemId, price, lock) {
     const requestId = uniqueRequestId();
 

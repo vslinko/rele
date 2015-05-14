@@ -33,12 +33,12 @@ function createLock() {
 const queues = {};
 const processed = {};
 
-export default function syncronize(limit, keyGetter) {
+export default function syncronize({limit = -1, queueKey, onQueueStart, onQueueEnd}) {
   return function syncronize(obj, prop, descriptor) {
     const method = descriptor.value;
 
     async function processQueue(context, args) {
-      const key = keyGetter(...args);
+      const key = queueKey(...args);
       if (!queues[key]) {
         queues[key] = [];
       }
@@ -61,6 +61,7 @@ export default function syncronize(limit, keyGetter) {
       }
 
       processed[key] = true;
+      if (onQueueStart) onQueueStart.call(context, key);
 
       let error, response;
       try {
@@ -77,6 +78,7 @@ export default function syncronize(limit, keyGetter) {
         }
       } else {
         processed[key] = false;
+        if (onQueueEnd) onQueueEnd.call(context, key);
       }
 
       if (error) {
