@@ -7,6 +7,6 @@ export default class CategoryReleActions extends Actions {
   }
 
   static filter({id}, parent, store, flux) {
-    return store.get('Category').get(id);
+    return store.getResource('Category', id);
   }
 }

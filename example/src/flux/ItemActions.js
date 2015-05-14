@@ -1,4 +1,3 @@
-import uniqueRequestId from '../../../lib/util/uniqueRequestId';
 import timeout from '../utils/timeout';
 import {Actions} from 'flummox';
 import syncronize from '../utils/syncronize';
@@ -11,11 +10,9 @@ export default class ItemActions extends Actions {
   }
 
   async createItem(item) {
-    const requestId = uniqueRequestId();
-
     const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
 
-    this.flux.getActions('rele').startOptimisticRequest(requestId, {
+    const optimisticRequest = this.flux.startOptimisticRequest({
       addToLinkage: [['Category', categoryId, 'items', item]],
       add: item
     });
@@ -34,11 +31,11 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('rele').endOptimisticRequest(requestId, {
+      optimisticRequest.commit({
         merge: collectJsonApiItems(json)
       });
     } catch (e) {
-      this.flux.getActions('rele').cancelOptimisticRequest(requestId);
+      optimisticRequest.cancel();
       // TODO: Show error
       console.log(e.stack);
     }
@@ -49,10 +46,9 @@ export default class ItemActions extends Actions {
     queueKey: itemId => `ItemActions#${itemId}`
   })
   async setPrice(itemId, price, lock) {
-    const requestId = uniqueRequestId();
+    const item = this.flux.getResource('Item', itemId);
 
-    const item = this.flux.getStore('rele').get('Item').get(itemId);
-    this.flux.getActions('rele').startOptimisticRequest(requestId, {
+    const optimisticRequest = this.flux.startOptimisticRequest({
       merge: item.set('price', price)
     });
 
@@ -60,7 +56,7 @@ export default class ItemActions extends Actions {
       const {canceled} = await lock;
 
       if (canceled) {
-        return this.flux.getActions('rele').cancelOptimisticRequest(requestId);
+        return optimisticRequest.cancel();
       }
 
       const response = await fetch(`/api/items/${item.get('id')}`, {
@@ -84,22 +80,21 @@ export default class ItemActions extends Actions {
         throw new Error(json.errors[0].title);
       }
 
-      this.flux.getActions('rele').endOptimisticRequest(requestId, {
+      optimisticRequest.commit({
         merge: collectJsonApiItems(json)
       });
     } catch (error) {
-      this.flux.getActions('rele').cancelOptimisticRequest(requestId);
+      optimisticRequest.cancel();
       this.handleSetPriceError(item, price, error);
     }
   }
 
   async deleteItem(itemId) {
-    const requestId = uniqueRequestId();
+    const item = this.flux.getResource('Item', itemId);
 
-    const item = this.flux.getStore('rele').get('Item').get(itemId);
     const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
 
-    this.flux.getActions('rele').startOptimisticRequest(requestId, {
+    const optimisticRequest = this.flux.startOptimisticRequest({
       remove: item
     });
 
@@ -111,12 +106,12 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('rele').endOptimisticRequest(requestId, {
+      optimisticRequest.commit({
         merge: collectJsonApiItems(json),
         remove: item
       });
     } catch (e) {
-      this.flux.getActions('rele').cancelOptimisticRequest(requestId);
+      optimisticRequest.cancel();
       // TODO: Show error
     }
   }
