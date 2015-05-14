@@ -10,11 +10,11 @@ export default class ItemStore extends Store {
   }
 
   handleSetPriceError({item, price, error}) {
-    this.errors[item.id] = error;
+    this.errors[item.get('id')] = error;
     this.forceUpdate();
   }
 
   getError(item) {
-    return this.errors[item.id];
+    return this.errors[item.get('id')];
   }
 }

@@ -2,6 +2,7 @@ import React from 'react';
 import Item from './Item';
 import {ql} from '../../../lib/ql';
 import flux from '../flux';
+import newItem from '../utils/newItem';
 
 export default class Category extends React.Component {
   static queries = {
@@ -24,26 +25,23 @@ export default class Category extends React.Component {
   };
 
   createItem() {
-    flux.getActions('item').createItem({
-      type: 'Item',
-      id: null,
-      price: 0,
+    flux.getActions('item').createItem(newItem({
       title: String(Math.random()),
       links: {
         category: {
           linkage: {
             type: 'Category',
-            id: this.props.category.id
+            id: this.props.category.get('id')
           }
         }
       }
-    });
+    }));
   }
 
   renderItem(item, index) {
     return (
-      <div key={item.id || `unsaved${index}`}>
-        {item.id || 'Saving'}
+      <div key={item.get('id') || `unsaved${index}`}>
+        {item.get('id') || 'Saving'}
         &nbsp;
         <Item item={item} />
       </div>
@@ -51,12 +49,15 @@ export default class Category extends React.Component {
   }
 
   render() {
+    const {category} = this.props;
+    const avatar = category.get('avatar');
+
     return (
       <div>
-        <img src={this.props.category.avatar.url} />
-        <h1>{this.props.category.title}</h1>
-        <h2>{this.props.category.subtitle}</h2>
-        {this.props.category.items.map((item, index) => this.renderItem(item, index))}
+        <img src={avatar.get('url')} />
+        <h1>{category.get('title')}</h1>
+        <h2>{category.get('subtitle')}</h2>
+        {category.get('items').map((item, index) => this.renderItem(item, index))}
         <button onClick={() => this.createItem()}>Create New</button>
       </div>
     );

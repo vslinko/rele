@@ -1,10 +1,10 @@
-import {Rele} from '../../..';
+import ImmutableRele from '../../../ImmutableRele';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
 import CategoryReleActions from './CategoryReleActions';
 import ItemsReleActions from './ItemsReleActions';
 
-export default class Flux extends Rele {
+export default class Flux extends ImmutableRele {
   constructor() {
     super();
 

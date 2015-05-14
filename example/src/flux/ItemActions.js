@@ -21,7 +21,7 @@ export default class ItemActions extends Actions {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          data: item
+          data: item.toJS()
         })
       });
 
@@ -35,22 +35,22 @@ export default class ItemActions extends Actions {
     }
   }
 
-  @syncronize(item => `ItemActions${item.id}`)
+  @syncronize(item => `ItemActions${item.get('id')}`)
   async setPrice(item, price, lock) {
     const id = uniqueRequestId();
 
-    this.flux.getActions('rele').startUpdateRequest(id, Object.assign({}, item, {price}));
+    this.flux.getActions('rele').startUpdateRequest(id, item.set('price', price));
 
     try {
       await lock;
 
-      const response = await fetch(`/api/items/${item.id}`, {
+      const response = await fetch(`/api/items/${item.get('id')}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          data: {type: item.type, id: item.id, price}
+          data: {type: item.get('type'), id: item.get('id'), price}
         })
       });
 
@@ -86,7 +86,7 @@ export default class ItemActions extends Actions {
     try {
       await lock;
 
-      const response = await fetch(`/api/items/${item.id}`, {
+      const response = await fetch(`/api/items/${item.get('id')}`, {
         method: 'DELETE'
       });
 
