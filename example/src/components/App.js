@@ -29,8 +29,8 @@ export default class App extends React.Component {
 
     return (
       <div>
-        {this.props.requestsCount > 0 && `Saving ${this.props.requestsCount}`}
         <Category category={this.props.category} />
+        {this.props.requestsCount > 0 && `Saving ${this.props.requestsCount}`}
       </div>
     );
   }
