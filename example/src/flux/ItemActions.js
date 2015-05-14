@@ -30,7 +30,7 @@ export default class ItemActions extends Actions {
 
       this.flux.getActions('rele').endCreateRequest(id, json);
     } catch (e) {
-      this.flux.getActions('rele').endCreateRequest(id, null);
+      this.flux.getActions('rele').cancelCreateRequest(id);
       throw e;
     }
   }
@@ -45,7 +45,7 @@ export default class ItemActions extends Actions {
       const {canceled} = await lock;
 
       if (canceled) {
-        return this.flux.getActions('rele').endUpdateRequest(id, null);
+        return this.flux.getActions('rele').cancelUpdateRequest(id);
       }
 
       const response = await fetch(`/api/items/${item.get('id')}`, {
@@ -71,7 +71,7 @@ export default class ItemActions extends Actions {
 
       this.flux.getActions('rele').endUpdateRequest(id, json);
     } catch (error) {
-      this.flux.getActions('rele').endUpdateRequest(id, null);
+      this.flux.getActions('rele').cancelUpdateRequest(id);
       this.handleSetPriceError(item, price, error);
 
       // stop queue
@@ -94,9 +94,9 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('rele').endDeleteRequest(id, true, json);
+      this.flux.getActions('rele').endDeleteRequest(id, json);
     } catch (e) {
-      this.flux.getActions('rele').endDeleteRequest(id, false);
+      this.flux.getActions('rele').cancelDeleteRequest(id);
       throw e;
     }
   }
