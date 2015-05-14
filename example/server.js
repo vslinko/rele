@@ -86,8 +86,8 @@ const data = {
 };
 
 server.connection({
-  host: '0.0.0.0',
-  port: 3000
+  host: process.env.IP || '0.0.0.0',
+  port: process.env.PORT || 3000
 });
 
 function getOne(type, id) {

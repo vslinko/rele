@@ -6,10 +6,8 @@
 
 ```
 npm install
-cd example
-node server.js &
-../node_modules/.bin/webpack-dev-server &
-open http://localhost:8080
+npm start &
+open http://localhost:3000
 ```
 
 ## QL Example
