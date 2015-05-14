@@ -97,7 +97,6 @@ export default class ItemActions extends Actions {
     const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
 
     this.flux.getActions('rele').startOptimisticRequest(requestId, {
-      removeFromLinkage: [['Category', categoryId, 'items', item]],
       remove: item
     });
 

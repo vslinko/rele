@@ -1,6 +1,6 @@
 {
   "name": "rele",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "scripts": {
     "build": "rm -rf build && babel lib -d build/lib && cp package.json *.js build",
     "deploy": "npm run build && cd build && npm publish"
