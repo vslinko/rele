@@ -1,7 +1,7 @@
 import uniqueRequestId from '../../../lib/util/uniqueRequestId';
 import timeout from '../utils/timeout';
 import {Actions} from 'flummox';
-import {SyncError, syncronize} from '../utils/syncronize';
+import syncronize from '../utils/syncronize';
 
 export default class ItemActions extends Actions {
   constructor(flux) {
@@ -35,14 +35,18 @@ export default class ItemActions extends Actions {
     }
   }
 
-  @syncronize(item => `ItemActions${item.get('id')}`)
+  @syncronize(1, item => `ItemActions#${item.get('id')}`)
   async setPrice(item, price, lock) {
     const id = uniqueRequestId();
 
     this.flux.getActions('rele').startUpdateRequest(id, item.set('price', price));
 
     try {
-      await lock;
+      const {canceled} = await lock;
+
+      if (canceled) {
+        return this.flux.getActions('rele').endUpdateRequest(id, null);
+      }
 
       const response = await fetch(`/api/items/${item.get('id')}`, {
         method: 'PUT',
@@ -68,10 +72,7 @@ export default class ItemActions extends Actions {
       this.flux.getActions('rele').endUpdateRequest(id, json);
     } catch (error) {
       this.flux.getActions('rele').endUpdateRequest(id, null);
-
-      if (!(error instanceof SyncError)) {
-        this.handleSetPriceError(item, price, error);
-      }
+      this.handleSetPriceError(item, price, error);
 
       // stop queue
       throw error;

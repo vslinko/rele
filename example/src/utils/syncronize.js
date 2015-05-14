@@ -1,9 +1,39 @@
-export class SyncError extends Error {}
+function createLock() {
+  const lock = {};
+  const fn = {};
+
+  lock.unlocked = false;
+  lock.canceled = false;
+  lock.stopped = false;
+
+  lock.unlock = () => {
+    if (lock.unlocked) throw new Error();
+    lock.unlocked = true;
+    fn.resolve({canceled: lock.canceled});
+  };
+
+  lock.cancel = () => {
+    if (lock.unlocked) throw new Error();
+    lock.canceled = true;
+  };
+
+  lock.stop = () => {
+    if (lock.unlocked) throw new Error();
+    lock.stopped = true;
+  };
+
+  lock.promise = new Promise(function(resolve, reject) {
+    fn.resolve = resolve;
+    fn.reject = reject;
+  });
+
+  return lock;
+}
 
 const queues = {};
 const processed = {};
 
-export function syncronize(keyGetter) {
+export default function syncronize(limit, keyGetter) {
   return function syncronize(obj, prop, descriptor) {
     const method = descriptor.value;
 
@@ -13,36 +43,47 @@ export function syncronize(keyGetter) {
         queues[key] = [];
       }
 
+      const lock = createLock();
+      args.push(lock.promise);
+
       if (processed[key]) {
-        const lock = {};
-        lock.promise = new Promise(function(resolve, reject) {
-            lock.resolve = resolve;
-            lock.reject = () => reject(new SyncError());
-        });
-        queues[key].push(lock);
-        args.push(lock.promise);
+        if (limit === 0) {
+          canceled = true;
+          lock.cancel();
+        } else {
+          queues[key].push(lock);
+          if (limit > 0 && queues[key].length > limit) {
+            queues[key][queues[key].length - limit - 1].cancel();
+          }
+        }
+      } else {
+        lock.unlock();
       }
 
       processed[key] = true;
-      let error;
+
+      let error, response;
       try {
-        const response = await method.apply(context, args);
+        response = await method.apply(context, args);
       } catch (e) {
         error = e;
       }
 
       if (queues[key].length > 0) {
-        if (error) {
-          queues[key].shift().reject(error);
-          throw error;
+        if (error || lock.stopped) {
+          queues[key].shift().stop();
         } else {
-          queues[key].shift().resolve(args[1]);
+          queues[key].shift().unlock();
         }
       } else {
         processed[key] = false;
       }
 
-      return response;
+      if (error) {
+        throw error;
+      } else {
+        return response;
+      }
     }
 
     descriptor.value = function (...args) {
@@ -50,5 +91,5 @@ export function syncronize(keyGetter) {
     };
 
     return descriptor;
-}
+  };
 }
