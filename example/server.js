@@ -7,10 +7,18 @@ function getUniqueId() {
   return String(id++);
 }
 
+const avatarId = getUniqueId();
 const categoryId = getUniqueId();
 const itemIds = [getUniqueId(), getUniqueId(), getUniqueId()];
 
 const data = {
+  Avatar: [
+    {
+      type: 'Avatar',
+      id: avatarId,
+      url: 'http://lorempixel.com/100/100/'
+    }
+  ],
   Category: [
     {
       type: 'Category',
@@ -18,6 +26,9 @@ const data = {
       title: 'Phones',
       subtitle: 'Mobile phones',
       links: {
+        avatar: {
+          linkage: {type: 'Avatar', id: avatarId}
+        },
         items: {
           linkage: [
             {type: 'Item', id: itemIds[0]},
@@ -98,7 +109,8 @@ server.route({
   path: '/api/categories/{id}',
   handler: function (request, reply) {
     reply({
-      data: getOne('Category', request.params.id)
+      data: getOne('Category', request.params.id),
+      included: getAll('Avatar')
     });
   }
 });

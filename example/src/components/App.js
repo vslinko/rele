@@ -15,7 +15,7 @@ export default class App extends React.Component {
   static queries = {
     category() {
       return ql`
-        category(id: ${"1"}) {
+        category(id: ${"2"}) {
           ${Category.queries.category()}
         }
       `;

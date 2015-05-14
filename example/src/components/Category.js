@@ -14,6 +14,9 @@ export default class Category extends React.Component {
           items() {
             id,
             ${Item.queries.item()}
+          },
+          avatar : Avatar {
+            url
           }
         }
       `;
@@ -50,6 +53,7 @@ export default class Category extends React.Component {
   render() {
     return (
       <div>
+        <img src={this.props.category.avatar.url} />
         <h1>{this.props.category.title}</h1>
         <h2>{this.props.category.subtitle}</h2>
         {this.props.category.items.map((item, index) => this.renderItem(item, index))}
