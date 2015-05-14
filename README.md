@@ -1,4 +1,8 @@
-# relay-flummox-jsonapi
+# Rele
+
+> Rele is mix of Relay concept and Flummox library.
+
+## Example
 
 ```
 npm install
