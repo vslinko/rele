@@ -12,7 +12,7 @@ export default class ItemActions extends Actions {
   async createItem(item) {
     const id = uniqueRequestId();
 
-    this.flux.getActions('relay').startCreateRequest(id, item);
+    this.flux.getActions('rele').startCreateRequest(id, item);
 
     try {
       const response = await fetch('/api/items', {
@@ -28,9 +28,9 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('relay').endCreateRequest(id, json);
+      this.flux.getActions('rele').endCreateRequest(id, json);
     } catch (e) {
-      this.flux.getActions('relay').endCreateRequest(id, null);
+      this.flux.getActions('rele').endCreateRequest(id, null);
       throw e;
     }
   }
@@ -39,7 +39,7 @@ export default class ItemActions extends Actions {
   async setPrice(item, price, lock) {
     const id = uniqueRequestId();
 
-    this.flux.getActions('relay').startUpdateRequest(id, Object.assign({}, item, {price}));
+    this.flux.getActions('rele').startUpdateRequest(id, Object.assign({}, item, {price}));
 
     try {
       await lock;
@@ -65,9 +65,9 @@ export default class ItemActions extends Actions {
         throw new Error(json.errors[0].title);
       }
 
-      this.flux.getActions('relay').endUpdateRequest(id, json);
+      this.flux.getActions('rele').endUpdateRequest(id, json);
     } catch (error) {
-      this.flux.getActions('relay').endUpdateRequest(id, null);
+      this.flux.getActions('rele').endUpdateRequest(id, null);
 
       if (!(error instanceof SyncError)) {
         this.handleSetPriceError(item, price, error);
@@ -81,7 +81,7 @@ export default class ItemActions extends Actions {
   async deleteItem(item, lock) {
     const id = uniqueRequestId();
 
-    this.flux.getActions('relay').startDeleteRequest(id, item);
+    this.flux.getActions('rele').startDeleteRequest(id, item);
 
     try {
       await lock;
@@ -93,9 +93,9 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.getActions('relay').endDeleteRequest(id, true, json);
+      this.flux.getActions('rele').endDeleteRequest(id, true, json);
     } catch (e) {
-      this.flux.getActions('relay').endDeleteRequest(id, false);
+      this.flux.getActions('rele').endDeleteRequest(id, false);
       throw e;
     }
   }

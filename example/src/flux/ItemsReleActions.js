@@ -1,7 +1,7 @@
 import {Actions} from 'flummox';
 import fetchJsonApi from '../utils/fetchJsonApi';
 
-export default class ItemsRelayActions extends Actions {
+export default class ItemsReleActions extends Actions {
   fetch({}, fields, include, parent) {
     const params = [];
 

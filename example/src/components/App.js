@@ -1,13 +1,13 @@
 import React from 'react';
 import Category from './Category';
-import {ql} from '../../../lib/ql';
-import relayWrapper from '../../../lib/react/relayWrapper';
+import {ql} from '../../..';
+import releWrapper from '../../../releWrapper';
 import flux from '../flux';
 import connectToStores from '../utils/connectToStores';
 
-@relayWrapper(flux)
+@releWrapper(flux)
 @connectToStores(flux, {
-  relay: (store) => ({
+  rele: (store) => ({
     requestsCount: store.getRequestsCount()
   })
 })

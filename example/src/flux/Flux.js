@@ -1,15 +1,15 @@
-import Relay from '../../../lib/Relay';
+import {Rele} from '../../..';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
-import CategoryRelayActions from './CategoryRelayActions';
-import ItemsRelayActions from './ItemsRelayActions';
+import CategoryReleActions from './CategoryReleActions';
+import ItemsReleActions from './ItemsReleActions';
 
-export default class Flux extends Relay {
+export default class Flux extends Rele {
   constructor() {
     super();
 
-    this.createRelayActions('category', CategoryRelayActions);
-    this.createRelayActions('items', ItemsRelayActions);
+    this.createReleActions('category', CategoryReleActions);
+    this.createReleActions('items', ItemsReleActions);
     this.createActions('item', ItemActions, this);
     this.createStore('item', ItemStore, this);
   }
