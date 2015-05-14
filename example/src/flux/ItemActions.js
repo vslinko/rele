@@ -14,11 +14,10 @@ export default class ItemActions extends Actions {
     const requestId = uniqueRequestId();
 
     const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
-    const category = this.flux.getStore('rele').get('Category').get(categoryId);
 
     this.flux.getActions('rele').startOptimisticRequest(requestId, {
-      add: item,
-      merge: category.updateIn(['links', 'items', 'linkage'], linkage => linkage.push(item))
+      addToLinkage: [['Category', categoryId, 'items', item]],
+      add: item
     });
 
     try {
@@ -96,10 +95,9 @@ export default class ItemActions extends Actions {
 
     const item = this.flux.getStore('rele').get('Item').get(itemId);
     const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
-    const category = this.flux.getStore('rele').get('Category').get(categoryId);
 
     this.flux.getActions('rele').startOptimisticRequest(requestId, {
-      merge: category.updateIn(['links', 'items', 'linkage'], linkage => linkage.filter(link => link.get('id') !== itemId)),
+      removeFromLinkage: [['Category', categoryId, 'items', item]],
       remove: item
     });
 
