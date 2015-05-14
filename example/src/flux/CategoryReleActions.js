@@ -6,7 +6,7 @@ export default class CategoryReleActions extends Actions {
     return fetchJsonApi(`/api/categories/${id}`, fields, include);
   }
 
-  static filter({id}, parent, store) {
+  static filter({id}, parent, store, flux) {
     return store.get('Category').get(id);
   }
 }

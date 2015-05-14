@@ -12,7 +12,7 @@ export default class ItemsReleActions extends Actions {
     return fetchJsonApi(`/api/items`, fields, include, params);
   }
 
-  static filter({}, parent, store) {
+  static filter({}, parent, store, flux) {
     let items = store.get('Item');
 
     if (parent.type === 'Category') {
