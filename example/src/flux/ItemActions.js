@@ -31,7 +31,7 @@ export default class ItemActions extends Actions {
       this.flux.getActions('rele').endCreateRequest(id, json);
     } catch (e) {
       this.flux.getActions('rele').cancelCreateRequest(id);
-      throw e;
+      // TODO: Show error
     }
   }
 
@@ -73,20 +73,15 @@ export default class ItemActions extends Actions {
     } catch (error) {
       this.flux.getActions('rele').cancelUpdateRequest(id);
       this.handleSetPriceError(item, price, error);
-
-      // stop queue
-      throw error;
     }
   }
 
-  async deleteItem(item, lock) {
+  async deleteItem(item) {
     const id = uniqueRequestId();
 
     this.flux.getActions('rele').startDeleteRequest(id, item);
 
     try {
-      await lock;
-
       const response = await fetch(`/api/items/${item.get('id')}`, {
         method: 'DELETE'
       });
@@ -97,7 +92,7 @@ export default class ItemActions extends Actions {
       this.flux.getActions('rele').endDeleteRequest(id, json);
     } catch (e) {
       this.flux.getActions('rele').cancelDeleteRequest(id);
-      throw e;
+      // TODO: Show error
     }
   }
 
