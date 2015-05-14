@@ -13,6 +13,7 @@ export default class Item extends React.Component {
     item() {
       return ql`
         Item {
+          id,
           title,
           price
         }
@@ -21,11 +22,11 @@ export default class Item extends React.Component {
   };
 
   incrementPrice() {
-    flux.getActions('item').setPrice(this.props.item, this.props.item.get('price') + 1);
+    flux.getActions('item').setPrice(this.props.item.get('id'), this.props.item.get('price') + 1);
   }
 
   deleteItem() {
-    flux.getActions('item').deleteItem(this.props.item);
+    flux.getActions('item').deleteItem(this.props.item.get('id'));
   }
 
   render() {

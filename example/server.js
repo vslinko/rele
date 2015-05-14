@@ -110,7 +110,7 @@ server.route({
   handler: function (request, reply) {
     reply({
       data: getOne('Category', request.params.id),
-      included: getAll('Avatar')
+      included: getAll('Avatar').concat(getAll('Item'))
     });
   }
 });
@@ -132,8 +132,11 @@ server.route({
     const item = request.payload.data;
     item.id = getUniqueId();
     data['Item'].push(item);
+    const category = getOne('Category', item.links.category.linkage.id);
+    category.links.items.linkage.push({type: 'Item', id: item.id});
     reply({
-      data: item
+      data: item,
+      included: [category]
     });
   }
 });
@@ -162,9 +165,13 @@ server.route({
   method: 'DELETE',
   path: '/api/items/{id}',
   handler: function (request, reply) {
-    data.Item = data.Item.filter(function(item) { return item.id !== request.params.id; });
+    const item = getOne('Item', request.params.id);
+    data.Item = data.Item.filter(function(i) { return i.id !== item.id; });
+    const category = getOne('Category', item.links.category.linkage.id);
+    category.links.items.linkage = category.links.items.linkage.filter(function(i) { return i.id !== item.id; });
     reply({
-      data: null
+      data: null,
+      included: [category]
     });
   }
 });
