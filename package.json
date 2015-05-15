@@ -8,6 +8,7 @@
   },
   "dependencies": {},
   "peerDependencies": {
+    "hoc": "~1.0",
     "flummox": "4.0.0-alpha2",
     "react": "~0.13",
     "babel-runtime": "~5.3",

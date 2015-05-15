@@ -1,4 +1,5 @@
 import React from 'react';
+import {hocDecorator} from 'hoc';
 
 export default function connectToStores(flux, spec) {
   const stateGetters = Object.keys(spec).map(key => ({store: flux.getStore(key), getter: spec[key]}));
@@ -9,7 +10,7 @@ export default function connectToStores(flux, spec) {
     }, {});
   }
 
-  return Component => {
+  return hocDecorator(Component => {
     return class ConnectedComponent extends React.Component {
       static queries = Component.queries;
 
@@ -39,5 +40,5 @@ export default function connectToStores(flux, spec) {
         return <Component {...this.state} {...this.props} />;
       }
     };
-  };
+  });
 }
