@@ -8,80 +8,40 @@ export default class ItemActions extends Actions {
     this.flux = flux;
   }
 
-  @optimistic({
-    optimisticChanges: (item) => ({
-      addToLinkage: [['Category', item.getIn(['links', 'category', 'linkage', 'id']), 'items', item]],
-      add: [item]
-    })
-  })
-  async createItem(item) {
-    // TODO: Handle error
-    const response = await fetch('/api/items?include=category', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        data: item.toJS()
-      })
+  createItem(item) {
+    return this.flux.optimisticCreate({
+      url: '/api/items?include=category',
+      item,
+      addToLinkage: [
+        ['Category', item.getIn(['links', 'category', 'linkage', 'id']), 'items']
+      ]
     });
-
-    await timeout(1000);
-    return await response.json();
   }
 
-  @optimistic({
-    optimisticChanges: (itemId, price, flux) => ({
-      merge: [flux.getResource('Item', itemId).set('price', price)]
-    }),
-    syncronize: {
-      queueKey: itemId => `ItemActions#${itemId}`,
-      limit: 1
-    }
-  })
-  async setPrice(itemId, price) {
+  updateItem(id, item) {
+    return this.flux.optimisticUpdate({
+      url: `/api/items/${id}`,
+      item,
+      syncronize: {
+        queueKey: `Item#${id}`,
+        limit: 1
+      }
+    });
+  }
+
+  async setPrice(id, price) {
     try {
-      const response = await fetch(`/api/items/${itemId}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: {type: 'Item', id: itemId, price}
-        })
-      });
-
-      if (response.status < 200 || response.status >= 300) {
-        throw new Error('Server error');
-      }
-
-      await timeout(1000);
-      const json = await response.json();
-
-      if (json.errors) {
-        throw new Error(json.errors[0].title);
-      }
-
-      return json;
+      return await this.updateItem(id, {type: 'Item', id, price});
     } catch (error) {
-      this.handleSetPriceError(itemId, price, error);
-      throw error;
+      this.handleSetPriceError(id, price, error);
     }
   }
 
-  @optimistic({
-    optimisticChanges: (itemId, flux) => ({
-      remove: [flux.getResource('Item', itemId)]
-    })
-  })
-  async deleteItem(itemId) {
-    // TODO: Handle error
-    const response = await fetch(`/api/items/${itemId}?include=category`, {
-      method: 'DELETE'
+  deleteItem(id) {
+    return this.flux.optimisticDelete({
+      url: `/api/items/${id}?include=category`,
+      item: {type: 'Item', id}
     });
-
-    await timeout(1000);
-    return await response.json();
   }
 
   handleSetPriceError(itemId, price, error) {
