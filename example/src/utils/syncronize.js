@@ -33,64 +33,65 @@ function createLock() {
 const queues = {};
 const processed = {};
 
-export default function syncronize({limit = -1, queueKey, onQueueStart, onQueueEnd}) {
-  return function syncronize(obj, prop, descriptor) {
-    const method = descriptor.value;
-
-    async function processQueue(context, args) {
-      const key = queueKey(...args);
-      if (!queues[key]) {
-        queues[key] = [];
-      }
-
-      const lock = createLock();
-      args.push(lock.promise);
-
-      if (processed[key]) {
-        if (limit === 0) {
-          lock.cancel();
-        } else {
-          queues[key].push(lock);
-          if (limit > 0 && queues[key].length > limit) {
-            queues[key][queues[key].length - limit - 1].cancel();
-          }
-        }
-      } else {
-        lock.unlock();
-      }
-
-      processed[key] = true;
-      if (onQueueStart) onQueueStart.call(context, key);
-
-      let error, response;
-      try {
-        response = await method.apply(context, args);
-      } catch (e) {
-        error = e;
-      }
-
-      if (queues[key].length > 0) {
-        const nextLock = queues[key].shift();
-        if (error || lock.stopped) {
-          nextLock.stop();
-        }
-        nextLock.unlock();
-      } else {
-        processed[key] = false;
-        if (onQueueEnd) onQueueEnd.call(context, key);
-      }
-
-      if (error) {
-        throw error;
-      } else {
-        return response;
-      }
+export function syncronizeFn(fn, {limit = -1, queueKey, onQueueStart, onQueueEnd}) {
+  async function processQueue(context, args) {
+    const key = typeof queueKey === 'function' ? queueKey(...args) : queueKey;
+    if (!queues[key]) {
+      queues[key] = [];
     }
 
-    descriptor.value = function (...args) {
-      return processQueue(this, args);
-    };
+    const lock = createLock();
+    args.push(lock.promise);
 
+    if (processed[key]) {
+      if (limit === 0) {
+        lock.cancel();
+      } else {
+        queues[key].push(lock);
+        if (limit > 0 && queues[key].length > limit) {
+          queues[key][queues[key].length - limit - 1].cancel();
+        }
+      }
+    } else {
+      lock.unlock();
+    }
+
+    processed[key] = true;
+    if (onQueueStart) onQueueStart.call(context, key);
+
+    let error, response;
+    try {
+      response = await fn.apply(context, args);
+    } catch (e) {
+      error = e;
+    }
+
+    if (queues[key].length > 0) {
+      const nextLock = queues[key].shift();
+      if (error || lock.stopped) {
+        nextLock.stop();
+      }
+      nextLock.unlock();
+    } else {
+      processed[key] = false;
+      if (onQueueEnd) onQueueEnd.call(context, key);
+    }
+
+    if (error) {
+      throw error;
+    } else {
+      return response;
+    }
+  }
+
+  return function(...args) {
+    return processQueue(this, args);
+  };
+};
+
+export default function syncronize(config = {}) {
+  return function syncronize(obj, prop, descriptor) {
+    descriptor.value = syncronizeFn(descriptor.value, config);
     return descriptor;
   };
 }
