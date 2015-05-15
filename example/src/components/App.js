@@ -1,11 +1,11 @@
 import React from 'react';
 import Category from './Category';
 import {ql} from '../../..';
-import releWrapper from '../../../releWrapper';
+import releSmart from '../../../releSmart';
 import flux from '../flux';
 import connectToStores from '../utils/connectToStores';
 
-@releWrapper(flux)
+@releSmart(flux)
 @connectToStores(flux, {
   rele: (store) => ({
     requestsCount: store.getRequestsCount()
@@ -16,7 +16,7 @@ export default class App extends React.Component {
     category() {
       return ql`
         category(id: ${"2"}) {
-          ${Category.queries.category()}
+          ${Category.getQuery('category')}
         }
       `;
     }

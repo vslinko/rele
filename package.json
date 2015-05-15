@@ -1,6 +1,6 @@
 {
   "name": "rele",
-  "version": "0.4.3",
+  "version": "0.5.0",
   "scripts": {
     "start": "node ./example/start",
     "build": "rm -rf build && babel lib -d build/lib && cp package.json *.js build",

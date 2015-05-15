@@ -10,10 +10,8 @@ export default function connectToStores(flux, spec) {
     }, {});
   }
 
-  return hocDecorator(Component => {
-    return class ConnectedComponent extends React.Component {
-      static queries = Component.queries;
-
+  return hocDecorator(
+    Component => class ConnectedComponent extends React.Component {
       constructor(props) {
         super(props);
 
@@ -39,6 +37,6 @@ export default function connectToStores(flux, spec) {
       render() {
         return <Component {...this.state} {...this.props} />;
       }
-    };
-  });
+    }
+  );
 }

@@ -3,7 +3,9 @@ import Item from './Item';
 import {ql} from '../../../lib/ql';
 import flux from '../flux';
 import newItem from '../utils/newItem';
+import releDumb from '../../../releDumb';
 
+@releDumb
 export default class Category extends React.Component {
   static queries = {
     category() {
@@ -14,7 +16,7 @@ export default class Category extends React.Component {
           subtitle,
           items {
             id,
-            ${Item.queries.item()}
+            ${Item.getQuery('item')}
           },
           avatar : Avatar {
             url
