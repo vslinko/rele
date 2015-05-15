@@ -59,8 +59,8 @@ export default class Category extends React.Component {
         <img src={avatar.get('url')} />
         <h1>{category.get('title')}</h1>
         <h2>{category.get('subtitle')}</h2>
-        {category.get('items').map((item, index) => this.renderItem(item, index))}
         <button onClick={() => this.createItem()}>Create New</button>
+        {category.get('items').map((item, index) => this.renderItem(item, index))}
       </div>
     );
   }
