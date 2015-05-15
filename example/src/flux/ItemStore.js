@@ -9,12 +9,12 @@ export default class ItemStore extends Store {
     this.errors = {};
   }
 
-  handleSetPriceError({item, price, error}) {
-    this.errors[item.get('id')] = error;
+  handleSetPriceError({itemId, price, error}) {
+    this.errors[itemId] = error;
     this.forceUpdate();
   }
 
-  getError(item) {
-    return this.errors[item.get('id')];
+  getError(itemId) {
+    return this.errors[itemId];
   }
 }

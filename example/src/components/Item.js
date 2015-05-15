@@ -5,7 +5,7 @@ import connectToStores from '../utils/connectToStores';
 
 @connectToStores(flux, {
   item: (store, {item}) => ({
-    error: store.getError(item)
+    error: store.getError(item.get('id'))
   })
 })
 export default class Item extends React.Component {

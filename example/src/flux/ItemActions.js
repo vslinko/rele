@@ -1,7 +1,6 @@
-import timeout from '../utils/timeout';
 import {Actions} from 'flummox';
-import syncronize from '../utils/syncronize';
-import collectJsonApiItems from '../utils/collectJsonApiItems';
+import timeout from '../utils/timeout';
+import optimistic from '../utils/optimistic';
 
 export default class ItemActions extends Actions {
   constructor(flux) {
@@ -9,63 +8,46 @@ export default class ItemActions extends Actions {
     this.flux = flux;
   }
 
+  @optimistic({
+    optimisticChanges: (item) => ({
+      addToLinkage: [['Category', item.getIn(['links', 'category', 'linkage', 'id']), 'items', item]],
+      add: [item]
+    })
+  })
   async createItem(item) {
-    const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
-
-    const optimisticRequest = this.flux.startOptimisticRequest({
-      addToLinkage: [['Category', categoryId, 'items', item]],
-      add: item
+    // TODO: Handle error
+    const response = await fetch('/api/items?include=category', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        data: item.toJS()
+      })
     });
 
-    try {
-      const response = await fetch('/api/items?include=category', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          data: item.toJS()
-        })
-      });
-
-      const json = await response.json();
-      await timeout(1000);
-
-      optimisticRequest.commit({
-        merge: collectJsonApiItems(json)
-      });
-    } catch (e) {
-      optimisticRequest.cancel();
-      // TODO: Show error
-      console.log(e.stack);
-    }
+    await timeout(1000);
+    return await response.json();
   }
 
-  @syncronize({
-    limit: 1,
-    queueKey: itemId => `ItemActions#${itemId}`
+  @optimistic({
+    optimisticChanges: (itemId, price, flux) => ({
+      merge: [flux.getResource('Item', itemId).set('price', price)]
+    }),
+    syncronize: {
+      queueKey: itemId => `ItemActions#${itemId}`,
+      limit: 1
+    }
   })
-  async setPrice(itemId, price, lock) {
-    const item = this.flux.getResource('Item', itemId);
-
-    const optimisticRequest = this.flux.startOptimisticRequest({
-      merge: item.set('price', price)
-    });
-
+  async setPrice(itemId, price) {
     try {
-      const {canceled} = await lock;
-
-      if (canceled) {
-        return optimisticRequest.cancel();
-      }
-
-      const response = await fetch(`/api/items/${item.get('id')}`, {
+      const response = await fetch(`/api/items/${itemId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          data: {type: item.get('type'), id: item.get('id'), price}
+          data: {type: 'Item', id: itemId, price}
         })
       });
 
@@ -73,50 +55,36 @@ export default class ItemActions extends Actions {
         throw new Error('Server error');
       }
 
-      const json = await response.json();
       await timeout(1000);
+      const json = await response.json();
 
       if (json.errors) {
         throw new Error(json.errors[0].title);
       }
 
-      optimisticRequest.commit({
-        merge: collectJsonApiItems(json)
-      });
+      return json;
     } catch (error) {
-      optimisticRequest.cancel();
-      this.handleSetPriceError(item, price, error);
+      this.handleSetPriceError(itemId, price, error);
+      throw error;
     }
   }
 
+  @optimistic({
+    optimisticChanges: (itemId, flux) => ({
+      remove: [flux.getResource('Item', itemId)]
+    })
+  })
   async deleteItem(itemId) {
-    const item = this.flux.getResource('Item', itemId);
-
-    const categoryId = item.getIn(['links', 'category', 'linkage', 'id']);
-
-    const optimisticRequest = this.flux.startOptimisticRequest({
-      remove: item
+    // TODO: Handle error
+    const response = await fetch(`/api/items/${itemId}?include=category`, {
+      method: 'DELETE'
     });
 
-    try {
-      const response = await fetch(`/api/items/${item.get('id')}?include=category`, {
-        method: 'DELETE'
-      });
-
-      const json = await response.json();
-      await timeout(1000);
-
-      optimisticRequest.commit({
-        merge: collectJsonApiItems(json),
-        remove: item
-      });
-    } catch (e) {
-      optimisticRequest.cancel();
-      // TODO: Show error
-    }
+    await timeout(1000);
+    return await response.json();
   }
 
-  handleSetPriceError(item, price, error) {
-    return {item, price, error};
+  handleSetPriceError(itemId, price, error) {
+    return {itemId, price, error};
   }
 }
