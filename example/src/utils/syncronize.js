@@ -9,7 +9,7 @@ function createLock() {
   lock.unlock = () => {
     if (lock.unlocked) throw new Error();
     lock.unlocked = true;
-    fn.resolve({canceled: lock.canceled});
+    fn.resolve({canceled: lock.canceled || lock.stopped});
   };
 
   lock.cancel = () => {
@@ -48,7 +48,6 @@ export default function syncronize({limit = -1, queueKey, onQueueStart, onQueueE
 
       if (processed[key]) {
         if (limit === 0) {
-          canceled = true;
           lock.cancel();
         } else {
           queues[key].push(lock);
@@ -71,11 +70,11 @@ export default function syncronize({limit = -1, queueKey, onQueueStart, onQueueE
       }
 
       if (queues[key].length > 0) {
+        const nextLock = queues[key].shift();
         if (error || lock.stopped) {
-          queues[key].shift().stop();
-        } else {
-          queues[key].shift().unlock();
+          nextLock.stop();
         }
+        nextLock.unlock();
       } else {
         processed[key] = false;
         if (onQueueEnd) onQueueEnd.call(context, key);
