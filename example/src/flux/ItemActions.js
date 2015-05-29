@@ -29,15 +29,17 @@ export default class ItemActions extends Actions {
   }
 
   async setPriceO(id, price) {
+    this.handleSetPriceError(id, null);
     try {
       return await this.updateItem(id, {type: 'Item', id, attributes: {price}});
     } catch (error) {
-      this.handleSetPriceError(id, price, error);
+      this.handleSetPriceError(id, error);
     }
   }
 
   async setPriceP(id, price) {
     this.setDisabled(id, true);
+    this.handleSetPriceError(id, null);
 
     try {
       const response = await fetch(`/api/items/${id}`, {
@@ -61,10 +63,14 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
+      if (json.errors) {
+        throw new Error(json.errors.map(err => err.title).join('; '));
+      }
+
       this.flux.mergeResponse(json);
 
     } catch (error) {
-      this.handleSetPriceError(id, price, error);
+      this.handleSetPriceError(id, error);
     }
 
     this.setDisabled(id, false);
@@ -81,7 +87,7 @@ export default class ItemActions extends Actions {
     return {id, disabled};
   }
 
-  handleSetPriceError(itemId, price, error) {
-    return {itemId, price, error};
+  handleSetPriceError(itemId, error) {
+    return {itemId, error};
   }
 }
