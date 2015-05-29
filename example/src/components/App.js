@@ -16,7 +16,7 @@ export default class App extends React.Component {
     category() {
       return ql`
         category(id: ${"2"}) {
-          ${Category.getQuery('category')}
+          ${Category.queries.category()}
         }
       `;
     }

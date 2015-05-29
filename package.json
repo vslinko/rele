@@ -12,14 +12,14 @@
     "flummox": "4.0.0-alpha2",
     "immutable": "~3.7",
     "babel-runtime": "~5.4",
-    "hoc": "~1.1"
+    "copy-statics": "~1.0"
   },
   "devDependencies": {
     "react": "~0.13",
     "flummox": "4.0.0-alpha2",
     "immutable": "~3.7",
     "babel-runtime": "~5.4",
-    "hoc": "~1.1",
+    "copy-statics": "~1.0",
 
     "whatwg-fetch": "~0.8",
     "webpack": "~1.9",

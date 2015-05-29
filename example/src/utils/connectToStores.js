@@ -1,5 +1,5 @@
 import React from 'react';
-import {hocDecorator} from 'hoc';
+import copyStatics from 'copy-statics';
 
 export default function connectToStores(flux, spec) {
   const stateGetters = Object.keys(spec).map(key => ({store: flux.getStore(key), getter: spec[key]}));
@@ -10,7 +10,7 @@ export default function connectToStores(flux, spec) {
     }, {});
   }
 
-  return hocDecorator(
+  return copyStatics(
     Component => class ConnectedComponent extends React.Component {
       constructor(props) {
         super(props);

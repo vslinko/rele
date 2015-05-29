@@ -4,7 +4,6 @@ import flux from '../flux';
 import connectToStores from '../utils/connectToStores';
 import releDumb from '../../../releDumb';
 
-@releDumb
 @connectToStores(flux, {
   item: (store, {item}) => ({
     error: store.getError(item.get('id'))
