@@ -1,14 +1,15 @@
 import React from 'react';
 import Category from './Category';
 import {ql} from '../../..';
-import releSmart from '../../../releSmart';
+import relePreload from '../../../relePreload';
 import flux from '../flux';
 import connectToStores from '../utils/connectToStores';
 
-@releSmart(flux)
+@relePreload(flux)
 @connectToStores(flux, {
   rele: (store) => ({
-    requestsCount: store.getRequestsCount()
+    requestsCount: store.getRequestsCount(),
+    category: store.fulfill(App.queries.category())
   })
 })
 export default class App extends React.Component {
