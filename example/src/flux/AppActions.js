@@ -10,7 +10,7 @@ export default class AppActions extends Actions {
   }
 
   beforeUnload(event) {
-    const uncompletedRequestsCount = this.flux.getRequestsCount();
+    const uncompletedRequestsCount = this.flux.getOptimisticRequestsCount();
 
     if (uncompletedRequestsCount > 0) {
       event.returnValue = `You have ${uncompletedRequestsCount} uncompleted background requests. That requests will be canceled.`;

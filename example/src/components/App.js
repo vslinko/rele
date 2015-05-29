@@ -18,7 +18,7 @@ import connectToStores from '../utils/connectToStores';
         store.forceUpdate();
       }
     },
-    requestsCount: store.getRequestsCount(),
+    requestsCount: store.getOptimisticRequestsCount(),
     category: store.fulfill(App.queries.category())
   })
 })
