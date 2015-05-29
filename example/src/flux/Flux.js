@@ -4,7 +4,7 @@ import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
 import {collectJsonApiResources} from '../../..';
 import timeout from '../utils/timeout';
-import {syncronizeFn} from '../utils/syncronize';
+import {synchronizeFunction} from 'synchronize-calls';
 import * as releActions from './releActions';
 
 export default class Flux extends Rele {
@@ -96,7 +96,7 @@ export default class Flux extends Rele {
     };
 
     if (syncronize) {
-      fn = syncronizeFn(fn, syncronize);
+      fn = synchronizeFunction(fn, syncronize);
     }
 
     return fn();
