@@ -61,7 +61,7 @@ export default class ItemActions extends Actions {
       const json = await response.json();
       await timeout(1000);
 
-      this.flux.mergeJsonApiResponse(json);
+      this.flux.mergeResponse(json);
 
     } catch (error) {
       this.handleSetPriceError(id, price, error);

@@ -2,7 +2,7 @@ import {Rele} from '../../..';
 import AppActions from './AppActions';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
-import collectJsonApiItems from '../utils/collectJsonApiItems';
+import {collectJsonApiResources} from '../../..';
 import timeout from '../utils/timeout';
 import {syncronizeFn} from '../utils/syncronize';
 import * as releActions from './releActions';
@@ -86,7 +86,7 @@ export default class Flux extends Rele {
         }
 
         optimisticRequest.commit({
-          merge: collectJsonApiItems(json),
+          merge: collectJsonApiResources(json),
           remove: optimisticChanges.remove
         });
       } catch (e) {
