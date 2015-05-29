@@ -1,6 +1,5 @@
 import {Actions} from 'flummox';
 import timeout from '../utils/timeout';
-import optimistic from '../utils/optimistic';
 
 export default class ItemActions extends Actions {
   constructor(flux) {
