@@ -10,15 +10,13 @@ import connectToStores from '../utils/connectToStores';
 })
 export default class Item extends React.Component {
   static queries = {
-    item() {
-      return ql`
-        Item {
-          id,
-          title,
-          price
-        }
-      `;
-    }
+    item: ql`
+      Item {
+        id,
+        title,
+        price
+      }
+    `
   };
 
   incrementPrice() {

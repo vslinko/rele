@@ -13,13 +13,11 @@ import connectToStores from '../utils/connectToStores';
 })
 export default class App extends React.Component {
   static queries = {
-    category() {
-      return ql`
-        category(id: ${"2"}) {
-          ${Category.queries.category()}
-        }
-      `;
-    }
+    category: ql`
+      category(id: ${"2"}) {
+        ${Category.queries.category()}
+      }
+    `
   };
 
   render() {

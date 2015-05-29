@@ -6,22 +6,20 @@ import newItem from '../utils/newItem';
 
 export default class Category extends React.Component {
   static queries = {
-    category() {
-      return ql`
-        Category {
+    category: ql`
+      Category {
+        id,
+        title,
+        subtitle,
+        items {
           id,
-          title,
-          subtitle,
-          items {
-            id,
-            ${Item.queries.item()}
-          },
-          avatar : Avatar {
-            url
-          }
+          ${Item.queries.item()}
+        },
+        avatar : Avatar {
+          url
         }
-      `;
-    }
+      }
+    `
   };
 
   createItem() {
