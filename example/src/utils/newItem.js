@@ -1,19 +1,23 @@
 export default function newItem(data = {}) {
-  const links = Object.assign(
-    {category: {linkage: null}},
-    data.links || {}
-  );
-
-  const item = Object.assign(
+  const attributes = Object.assign(
     {
-      type: 'Item',
-      id: null,
       price: 0,
       title: ''
     },
-    data,
-    {links}
+    data.attributes || {}
   );
 
-  return item;
+  const relationships = Object.assign(
+    {
+      category: {data: null}
+    },
+    data.relationships || {}
+  );
+
+  return {
+    type: 'Item',
+    id: data.id || null,
+    attributes,
+    relationships
+  };
 }

@@ -24,10 +24,12 @@ export default class Category extends React.Component {
 
   createItem() {
     flux.getActions('item').createItem(newItem({
-      title: String(Math.random()),
-      links: {
+      attributes: {
+        title: String(Math.random())
+      },
+      relationships: {
         category: {
-          linkage: {
+          data: {
             type: 'Category',
             id: this.props.category.id
           }

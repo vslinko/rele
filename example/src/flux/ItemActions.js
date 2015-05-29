@@ -12,7 +12,7 @@ export default class ItemActions extends Actions {
       url: '/api/items?include=category',
       item,
       addToLinkage: [
-        ['Category', item.links.category.linkage.id, 'items']
+        ['Category', item.relationships.category.data.id, 'items']
       ]
     });
   }
@@ -30,7 +30,7 @@ export default class ItemActions extends Actions {
 
   async setPrice(id, price) {
     try {
-      return await this.updateItem(id, {type: 'Item', id, price});
+      return await this.updateItem(id, {type: 'Item', id, attributes: {price}});
     } catch (error) {
       this.handleSetPriceError(id, price, error);
     }

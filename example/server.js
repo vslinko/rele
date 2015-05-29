@@ -16,21 +16,25 @@ const data = {
     {
       type: 'Avatar',
       id: avatarId,
-      url: 'http://lorempixel.com/100/100/'
+      attributes: {
+        url: 'http://lorempixel.com/100/100/'
+      }
     }
   ],
   Category: [
     {
       type: 'Category',
       id: categoryId,
-      title: 'Phones',
-      subtitle: 'Mobile phones',
-      links: {
+      attributes: {
+        title: 'Phones',
+        subtitle: 'Mobile phones'
+      },
+      relationships: {
         avatar: {
-          linkage: {type: 'Avatar', id: avatarId}
+          data: {type: 'Avatar', id: avatarId}
         },
         items: {
-          linkage: [
+          data: [
             {type: 'Item', id: itemIds[0]},
             {type: 'Item', id: itemIds[1]},
             {type: 'Item', id: itemIds[2]}
@@ -43,11 +47,13 @@ const data = {
     {
       type: 'Item',
       id: itemIds[0],
-      title: 'iPhone 6 Plus',
-      price: 100,
-      links: {
+      attributes: {
+        title: 'iPhone 6 Plus',
+        price: 100
+      },
+      relationships: {
         category: {
-          linkage: {
+          data: {
             type: 'Category',
             id: categoryId
           }
@@ -57,11 +63,13 @@ const data = {
     {
       type: 'Item',
       id: itemIds[1],
-      title: 'iPhone 6',
-      price: 101,
-      links: {
+      attributes: {
+        title: 'iPhone 6',
+        price: 101
+      },
+      relationships: {
         category: {
-          linkage: {
+          data: {
             type: 'Category',
             id: categoryId
           }
@@ -71,11 +79,13 @@ const data = {
     {
       type: 'Item',
       id: itemIds[2],
-      title: 'iPhone 5S',
-      price: 102,
-      links: {
+      attributes: {
+        title: 'iPhone 5S',
+        price: 102
+      },
+      relationships: {
         category: {
-          linkage: {
+          data: {
             type: 'Category',
             id: categoryId
           }
@@ -98,9 +108,9 @@ function getAll(type) {
   return data[type];
 }
 
-function filterByLink(name, id) {
+function filterByRelationship(name, id) {
   return function (item) {
-    return item.links[name].linkage.id === id;
+    return item.relationships[name].data.id === id;
   };
 }
 
@@ -120,7 +130,7 @@ server.route({
   path: '/api/items',
   handler: function (request, reply) {
     reply({
-      data: getAll('Item').filter(filterByLink('category', request.query.filter.category))
+      data: getAll('Item').filter(filterByRelationship('category', request.query.filter.category))
     });
   }
 });
@@ -132,8 +142,8 @@ server.route({
     const item = request.payload.data;
     item.id = getUniqueId();
     data['Item'].push(item);
-    const category = getOne('Category', item.links.category.linkage.id);
-    category.links.items.linkage.push({type: 'Item', id: item.id});
+    const category = getOne('Category', item.relationships.category.data.id);
+    category.relationships.items.data.push({type: 'Item', id: item.id});
     reply({
       data: item,
       included: [category]
@@ -149,12 +159,12 @@ server.route({
     if (!item) {
       return reply({data: null}).code(404);
     }
-    if (request.payload.data.price > 105) {
+    if (request.payload.data.attributes.price > 105) {
       return reply({
         errors: [{title: 'Price is too large'}]
       });
     }
-    item.price = request.payload.data.price;
+    item.attributes.price = request.payload.data.attributes.price;
     reply({
       data: item
     });
@@ -167,8 +177,8 @@ server.route({
   handler: function (request, reply) {
     const item = getOne('Item', request.params.id);
     data.Item = data.Item.filter(function(i) { return i.id !== item.id; });
-    const category = getOne('Category', item.links.category.linkage.id);
-    category.links.items.linkage = category.links.items.linkage.filter(function(i) { return i.id !== item.id; });
+    const category = getOne('Category', item.relationships.category.data.id);
+    category.relationships.items.data = category.relationships.items.data.filter(function(i) { return i.id !== item.id; });
     reply({
       data: null,
       included: [category]
