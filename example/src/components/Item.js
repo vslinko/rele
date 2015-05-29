@@ -5,7 +5,8 @@ import connectToStores from '../utils/connectToStores';
 
 @connectToStores(flux, {
   item: (store, {item}) => ({
-    error: store.getError(item.id)
+    error: store.getError(item.id),
+    disabled: store.isDisabled(item.id)
   })
 })
 export default class Item extends React.Component {
@@ -19,8 +20,12 @@ export default class Item extends React.Component {
     `
   };
 
-  incrementPrice() {
-    flux.getActions('item').setPrice(this.props.item.id, this.props.item.price + 1);
+  incrementPriceO() {
+    flux.getActions('item').setPriceO(this.props.item.id, this.props.item.price + 1);
+  }
+
+  incrementPriceP() {
+    flux.getActions('item').setPriceP(this.props.item.id, this.props.item.price + 1);
   }
 
   deleteItem() {
@@ -28,7 +33,7 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const {item} = this.props;
+    const {item, disabled} = this.props;
     const created = !!item.id;
 
     return (
@@ -38,11 +43,15 @@ export default class Item extends React.Component {
         <i>{item.price}</i>
         &nbsp;
         {created &&
-          <button onClick={() => this.incrementPrice()}>Increment</button>
+          <button onClick={() => this.incrementPriceO()} disabled={disabled}>Optimistic Increment</button>
         }
         &nbsp;
         {created &&
-          <button onClick={() => this.deleteItem()}>Delete</button>
+          <button onClick={() => this.incrementPriceP()} disabled={disabled}>Pessimistic Increment</button>
+        }
+        &nbsp;
+        {created &&
+          <button onClick={() => this.deleteItem()} disabled={disabled}>Delete</button>
         }
         {this.props.error && `Unable to increment: ${this.props.error.message}`}
       </span>

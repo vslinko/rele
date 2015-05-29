@@ -5,8 +5,15 @@ export default class ItemStore extends Store {
     super();
 
     this.register(flux.getActions('item').handleSetPriceError, this.handleSetPriceError);
+    this.register(flux.getActions('item').setDisabled, this.handleSetDisabled);
 
     this.errors = {};
+    this.disabled = {};
+  }
+
+  handleSetDisabled({id, disabled}) {
+    this.disabled[id] = disabled;
+    this.forceUpdate();
   }
 
   handleSetPriceError({itemId, price, error}) {
@@ -16,5 +23,9 @@ export default class ItemStore extends Store {
 
   getError(itemId) {
     return this.errors[itemId];
+  }
+
+  isDisabled(id) {
+    return this.disabled[id] || false;
   }
 }
