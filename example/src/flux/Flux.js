@@ -1,4 +1,4 @@
-import ImmutableRele from '../../../ImmutableRele';
+import {Rele} from '../../..';
 import AppActions from './AppActions';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
@@ -7,7 +7,7 @@ import timeout from '../utils/timeout';
 import {syncronizeFn} from '../utils/syncronize';
 import * as releActions from './releActions';
 
-export default class Flux extends ImmutableRele {
+export default class Flux extends Rele {
   constructor() {
     super({releActions});
 
@@ -20,7 +20,7 @@ export default class Flux extends ImmutableRele {
     return this.optimistic({
       url,
       method: 'POST',
-      data: item.toJS(), // TODO
+      data: item,
       optimisticChanges: {
         addToLinkage: addToLinkage.map(linkage => linkage.concat([item])),
         add: [item]
@@ -35,7 +35,7 @@ export default class Flux extends ImmutableRele {
       method: 'PUT',
       data: item,
       optimisticChanges: {
-        merge: [this.wrapper(item)]
+        merge: [item]
       },
       syncronize
     });
@@ -46,7 +46,7 @@ export default class Flux extends ImmutableRele {
       url,
       method: 'DELETE',
       optimisticChanges: {
-        remove: [this.wrapper(item)]
+        remove: [item]
       },
       syncronize
     });

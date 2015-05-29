@@ -29,7 +29,7 @@ export default class Category extends React.Component {
         category: {
           linkage: {
             type: 'Category',
-            id: this.props.category.get('id')
+            id: this.props.category.id
           }
         }
       }
@@ -38,8 +38,8 @@ export default class Category extends React.Component {
 
   renderItem(item, index) {
     return (
-      <div key={item.get('id') || `unsaved${index}`}>
-        {item.get('id') || 'Saving'}
+      <div key={item.id || `unsaved${index}`}>
+        {item.id || 'Saving'}
         &nbsp;
         <Item item={item} />
       </div>
@@ -48,15 +48,14 @@ export default class Category extends React.Component {
 
   render() {
     const {category} = this.props;
-    const avatar = category.get('avatar');
 
     return (
       <div>
-        <img src={avatar.get('url')} />
-        <h1>{category.get('title')}</h1>
-        <h2>{category.get('subtitle')}</h2>
+        <img src={category.avatar.url} />
+        <h1>{category.title}</h1>
+        <h2>{category.subtitle}</h2>
         <button onClick={() => this.createItem()}>Create New</button>
-        {category.get('items').map((item, index) => this.renderItem(item, index))}
+        {category.items.map((item, index) => this.renderItem(item, index))}
       </div>
     );
   }

@@ -12,7 +12,7 @@ export default class ItemActions extends Actions {
       url: '/api/items?include=category',
       item,
       addToLinkage: [
-        ['Category', item.getIn(['links', 'category', 'linkage', 'id']), 'items']
+        ['Category', item.links.category.linkage.id, 'items']
       ]
     });
   }

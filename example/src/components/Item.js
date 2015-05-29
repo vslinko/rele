@@ -5,7 +5,7 @@ import connectToStores from '../utils/connectToStores';
 
 @connectToStores(flux, {
   item: (store, {item}) => ({
-    error: store.getError(item.get('id'))
+    error: store.getError(item.id)
   })
 })
 export default class Item extends React.Component {
@@ -20,22 +20,22 @@ export default class Item extends React.Component {
   };
 
   incrementPrice() {
-    flux.getActions('item').setPrice(this.props.item.get('id'), this.props.item.get('price') + 1);
+    flux.getActions('item').setPrice(this.props.item.id, this.props.item.price + 1);
   }
 
   deleteItem() {
-    flux.getActions('item').deleteItem(this.props.item.get('id'));
+    flux.getActions('item').deleteItem(this.props.item.id);
   }
 
   render() {
     const {item} = this.props;
-    const created = !!item.get('id');
+    const created = !!item.id;
 
     return (
       <span>
-        <b>{item.get('title')}</b>
+        <b>{item.title}</b>
         &nbsp;
-        <i>{item.get('price')}</i>
+        <i>{item.price}</i>
         &nbsp;
         {created &&
           <button onClick={() => this.incrementPrice()}>Increment</button>
