@@ -16,13 +16,13 @@ export default class Flux extends Rele {
     this.createStore('item', ItemStore, this);
   }
 
-  optimisticCreate({url, item, addToLinkage, syncronize}) {
+  optimisticCreate({url, item, addToRelationships, syncronize}) {
     return this.optimistic({
       url,
       method: 'POST',
       data: item,
       optimisticChanges: {
-        addToLinkage: addToLinkage.map(linkage => linkage.concat([item])),
+        addToRelationships: addToRelationships.map(addition => addition.concat([item])),
         add: [item]
       },
       syncronize

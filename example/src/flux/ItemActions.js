@@ -11,7 +11,7 @@ export default class ItemActions extends Actions {
     return this.flux.optimisticCreate({
       url: '/api/items?include=category',
       item,
-      addToLinkage: [
+      addToRelationships: [
         ['Category', item.relationships.category.data.id, 'items']
       ]
     });

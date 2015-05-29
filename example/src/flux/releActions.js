@@ -26,7 +26,7 @@ export const items = releAction({
     let items = store.get('Item');
 
     if (parent && parent.type === 'Category') {
-      items = items.filter(item => item.links.category.linkage.id === parent.id);
+      items = items.filter(item => item.relationships.category.data.id === parent.id);
     }
 
     return items;
