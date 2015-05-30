@@ -3,15 +3,9 @@ import Category from './Category';
 import {ql} from '../../..';
 import relePreload from '../../../relePreload';
 import flux from '../flux';
-import connectToStores from '../utils/connectToStores';
+import observer from '../utils/observer';
 
-@connectToStores(flux, {
-  rele: (store) => ({
-    requestsCount: store.getOptimisticRequestsCount(),
-    category: store.fulfill(App.queries.category())
-  })
-})
-@relePreload(flux)
+@observer
 export default class App extends React.Component {
   static queries = {
     category: ql`
@@ -21,15 +15,26 @@ export default class App extends React.Component {
     `
   };
 
+  componentWillMount() {
+    flux.getActions('rele').request(App.queries.category());
+  }
+
+  observe() {
+    return {
+      requestsCount: flux.observeStore('rele', store => store.getOptimisticRequestsCount()),
+      category: flux.observeStore('rele', store => store.fulfill(App.queries.category()))
+    };
+  }
+
   render() {
-    if (!this.props.category) {
+    if (!this.data.category) {
       return null;
     }
 
     return (
       <div>
-        <Category category={this.props.category} />
-        {this.props.requestsCount > 0 && `Saving ${this.props.requestsCount}`}
+        <Category category={this.data.category} />
+        {this.data.requestsCount > 0 && `Saving ${this.data.requestsCount}`}
       </div>
     );
   }

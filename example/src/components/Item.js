@@ -1,14 +1,9 @@
 import React from 'react';
 import {ql} from '../../../lib/ql';
 import flux from '../flux';
-import connectToStores from '../utils/connectToStores';
+import observer from '../utils/observer';
 
-@connectToStores(flux, {
-  item: (store, {item}) => ({
-    error: store.getError(item.id),
-    disabled: store.isDisabled(item.id)
-  })
-})
+@observer
 export default class Item extends React.Component {
   static queries = {
     item: ql`
@@ -19,6 +14,15 @@ export default class Item extends React.Component {
       }
     `
   };
+
+  observe() {
+    const {item} = this.props;
+
+    return {
+      error: flux.observeStore('item', store => store.getError(item.id)),
+      disabled: flux.observeStore('item', store => store.isDisabled(item.id))
+    };
+  }
 
   incrementPriceO() {
     flux.getActions('item').setPriceO(this.props.item.id, this.props.item.price + 1);
@@ -33,7 +37,8 @@ export default class Item extends React.Component {
   }
 
   render() {
-    const {item, disabled} = this.props;
+    const {item} = this.props;
+    const {error, disabled} = this.data;
     const created = !!item.id;
 
     return (
@@ -53,7 +58,7 @@ export default class Item extends React.Component {
         {created &&
           <button onClick={() => this.deleteItem()} disabled={disabled}>Delete</button>
         }
-        {this.props.error && `Unable to increment: ${this.props.error.message}`}
+        {error && `Unable to increment: ${error.message}`}
       </span>
     );
   }
