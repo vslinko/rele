@@ -8,26 +8,24 @@
   },
   "dependencies": {},
   "peerDependencies": {
-    "react": "~0.13",
     "flummox": "4.0.0-alpha2",
     "immutable": "~3.7",
-    "babel-runtime": "~5.4",
-    "copy-statics": "~1.0"
+    "babel-runtime": "~5.4"
   },
   "devDependencies": {
-    "react": "~0.13",
     "flummox": "4.0.0-alpha2",
     "immutable": "~3.7",
     "babel-runtime": "~5.4",
-    "copy-statics": "~1.0",
 
+    "react": "~0.13",
     "react-observe-decorator": "~1.0",
     "synchronize-calls": "~1.0",
     "whatwg-fetch": "~0.8",
+    "hapi": "~8.5",
+
     "webpack": "~1.9",
     "webpack-dev-server": "~1.8",
     "babel-loader": "~5.1",
-    "babel": "~5.4",
-    "hapi": "~8.5"
+    "babel": "~5.4"
   }
 }
