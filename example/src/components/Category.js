@@ -56,8 +56,8 @@ export default class Category extends React.Component {
         <img src={category.avatar.url} />
         <h1>{category.title}</h1>
         <h2>{category.subtitle}</h2>
-        <button onClick={() => this.createItem()}>Create New</button>
-        {category.items.map((item, index) => this.renderItem(item, index))}
+        <button onClick={::this.createItem}>Create New</button>
+        {category.items.map(::this.renderItem)}
       </div>
     );
   }

@@ -48,15 +48,15 @@ export default class Item extends React.Component {
         <i>{item.price}</i>
         &nbsp;
         {created &&
-          <button onClick={() => this.incrementPriceO()} disabled={disabled}>Optimistic Increment</button>
+          <button onClick={::this.incrementPriceO} disabled={disabled}>Optimistic Increment</button>
         }
         &nbsp;
         {created &&
-          <button onClick={() => this.incrementPriceP()} disabled={disabled}>Pessimistic Increment</button>
+          <button onClick={::this.incrementPriceP} disabled={disabled}>Pessimistic Increment</button>
         }
         &nbsp;
         {created &&
-          <button onClick={() => this.deleteItem()} disabled={disabled}>Delete</button>
+          <button onClick={::this.deleteItem} disabled={disabled}>Delete</button>
         }
         {error && `Unable to increment: ${error.message}`}
       </span>
