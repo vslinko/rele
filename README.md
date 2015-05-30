@@ -13,8 +13,8 @@ open http://localhost:3000
 ## QL Example
 
 ```js
-import {ql} from '../ql';
-import print from '../ql/print';
+import {ql} from 'rele';
+import {print} from 'rele/utils';
 
 const userSpec = ql`
   User {
@@ -27,21 +27,21 @@ const groupSpec = ql`
   Group {
     name,
     users {
-      ${userSpec}
+      ${userSpec()}
     }
   }
 `;
 
 const groupsPageQuery = ql`
   groups(page: ${1}) {
-    ${groupSpec},
+    ${groupSpec()},
     users : User {
       isAdmin
     }
   }
 `;
 
-console.log(print(groupsPageQuery));
+console.log(print(groupsPageQuery()));
 /* Normalized query:
 groups(page: 1) : Group {
   name,
