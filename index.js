@@ -1,3 +1,3 @@
-module.exports.Rele = require('./lib/Rele');
-module.exports.releAction = require('./lib/util/releAction');
-module.exports.ql = require('./lib/ql').ql;
+module.exports.Rele = require('./dist/Rele');
+module.exports.releAction = require('./dist/util/releAction');
+module.exports.ql = require('./dist/ql').ql;

@@ -1,10 +1,10 @@
 {
   "name": "rele",
-  "version": "0.5.6",
+  "version": "1.0.0",
   "scripts": {
     "start": "node ./example/start",
-    "build": "rm -rf build && babel lib -d build/lib && cp package.json *.js build",
-    "deploy": "npm run build && cd build && npm publish"
+    "build": "rm -rf dist && babel lib -d dist",
+    "prepublish": "npm run build"
   },
   "dependencies": {},
   "peerDependencies": {

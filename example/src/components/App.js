@@ -1,6 +1,6 @@
 import React from 'react';
 import Category from './Category';
-import {ql} from '../../..';
+import {ql} from '../../../lib/ql';
 import flux from '../flux';
 import observe from 'react-observe-decorator';
 

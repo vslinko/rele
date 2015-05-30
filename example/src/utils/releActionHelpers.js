@@ -1,5 +1,5 @@
 import fetchJsonApi from './fetchJsonApi';
-import {releAction} from '../../..';
+import releAction from '../../../lib/util/releAction';
 
 export function singleResourceAction({url, type}) {
   return releAction({

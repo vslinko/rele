@@ -1,2 +1,2 @@
-module.exports.print = require('./lib/ql/print');
-module.exports.collectJsonApiResources = require('./lib/util/collectJsonApiResources');
+module.exports.print = require('./dist/ql/print');
+module.exports.collectJsonApiResources = require('./dist/util/collectJsonApiResources');

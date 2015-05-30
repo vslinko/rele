@@ -1,8 +1,8 @@
-import {Rele} from '../../..';
+import Rele from '../../../lib/Rele';
 import AppActions from './AppActions';
 import ItemActions from './ItemActions';
 import ItemStore from './ItemStore';
-import {collectJsonApiResources} from '../../../utils';
+import collectJsonApiResources from '../../../lib/util/collectJsonApiResources';
 import timeout from '../utils/timeout';
 import {synchronizeFunction} from 'synchronize-calls';
 import * as releActions from './releActions';

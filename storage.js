@@ -1,2 +1,2 @@
-module.exports.jsonApi = require('./lib/storage/jsonApi');
-module.exports.immutableJsonApi = require('./lib/storage/immutableJsonApi');
+module.exports.jsonApi = require('./dist/storage/jsonApi');
+module.exports.immutableJsonApi = require('./dist/storage/immutableJsonApi');
