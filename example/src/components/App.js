@@ -3,9 +3,9 @@ import Category from './Category';
 import {ql} from '../../..';
 import relePreload from '../../../relePreload';
 import flux from '../flux';
-import observer from '../utils/observer';
+import observe from 'react-observe-decorator';
 
-@observer
+@observe
 export default class App extends React.Component {
   static queries = {
     category: ql`

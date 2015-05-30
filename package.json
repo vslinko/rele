@@ -21,6 +21,7 @@
     "babel-runtime": "~5.4",
     "copy-statics": "~1.0",
 
+    "react-observe-decorator": "~1.0",
     "synchronize-calls": "~1.0",
     "whatwg-fetch": "~0.8",
     "webpack": "~1.9",

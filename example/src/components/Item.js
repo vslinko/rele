@@ -1,9 +1,9 @@
 import React from 'react';
 import {ql} from '../../../lib/ql';
 import flux from '../flux';
-import observer from '../utils/observer';
+import observe from 'react-observe-decorator';
 
-@observer
+@observe
 export default class Item extends React.Component {
   static queries = {
     item: ql`
